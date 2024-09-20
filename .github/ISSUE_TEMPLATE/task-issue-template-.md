@@ -1,8 +1,8 @@
 ---
-name: Task 이슈 템플릿
+name: 'Task Issue Template '
 about: 프로젝트의 개별 작업을 정의하고 추적하기 위한 템플릿
 title: "[Task] "
-labels: ''
+labels: task
 assignees: zeyakim-dev
 
 ---
