@@ -44,6 +44,3 @@ def create_domains(names: List[str] = typer.Argument(..., help="List of domain n
     is_single = len(names) == 1
     typer.echo(f"Successfully created domain{'s' if not is_single else ''}: {', '.join(names)}")
     return True
-
-if __name__ == "__main__":
-    app()
