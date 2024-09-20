@@ -4,12 +4,12 @@ version = "0.1.0"
 description = ""
 authors = ["zeyakim-dev <zeyakimdev@gmail.com>"]
 readme = "README.md"
+package-mode = false
 
 [tool.poetry.dependencies]
-python = "3.11.9"
+python = "^3.11.9"
 fastapi = "^0.115.0"
 uvicorn = "^0.30.6"
-
 
 [tool.poetry.group.dev.dependencies]
 pytest = "^8.3.3"
