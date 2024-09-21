@@ -1,23 +1,33 @@
+import os
 from pathlib import Path
 from typing import List
-import os
+
 import typer
-from rich.tree import Tree
 from rich import print
+from rich.tree import Tree
 
 app = typer.Typer()
+
 
 def read_ignore_patterns(ignore_file: Path) -> List[str]:
     if ignore_file.exists():
         with ignore_file.open() as f:
-            return [line.strip() for line in f if line.strip() and not line.startswith('#')]
+            return [
+                line.strip() for line in f if line.strip() and not line.startswith("#")
+            ]
     return []
+
 
 def should_ignore(path: Path, ignore_patterns: List[str]) -> bool:
     return any(path.match(pattern) for pattern in ignore_patterns)
 
-def build_directory_tree(directory: Path, tree: Tree, ignore_patterns: List[str], root_dir: Path) -> None:
-    for item in sorted(directory.iterdir(), key=lambda x: (not x.is_dir(), x.name.lower())):
+
+def build_directory_tree(
+    directory: Path, tree: Tree, ignore_patterns: List[str], root_dir: Path
+) -> None:
+    for item in sorted(
+        directory.iterdir(), key=lambda x: (not x.is_dir(), x.name.lower())
+    ):
         if should_ignore(item.relative_to(root_dir), ignore_patterns):
             continue
         if item.is_dir():
@@ -26,9 +36,10 @@ def build_directory_tree(directory: Path, tree: Tree, ignore_patterns: List[str]
         else:
             tree.add(f"[green]{item.name}[/green]")
 
+
 @app.command("tree")
 def tree_command(
-    ignore_file: str = typer.Option('.treeignore', help="Path to the ignore file")
+    ignore_file: str = typer.Option(".treeignore", help="Path to the ignore file")
 ):
     """
     Display the directory tree from the current working directory, excluding items specified in .treeignore file.
