@@ -4,7 +4,10 @@ from datetime import datetime
 from app.shared.domain.base_entity import BaseEntity
 from app.shared.domain.mixin.timestamp_mixin import TimestampMixin
 from app.shared.domain.mixin.soft_deletion_mixin import SoftDeletionMixin
-from app.utils.enums import RequirementComplexity, RequirementPriority, RequirementStatus, RequirementType
+from app.domains.requirement.value_objects.requirement_complexity import RequirementComplexity
+from app.domains.requirement.value_objects.requirement_priority import RequirementPriority
+from app.domains.requirement.value_objects.requirement_status import RequirementStatus
+from app.domains.requirement.value_objects.requirement_type import RequirementType
 
 @dataclass
 class Requirement(BaseEntity, TimestampMixin, SoftDeletionMixin):
