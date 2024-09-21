@@ -8,20 +8,21 @@ app = typer.Typer()
 def create_domain_structure(base_path: Path, domain_name: str):
     domain_path = base_path / domain_name
     folders = [
-        "infrastructure",
-        "domain",
-        "usecase",
-        "interface",
-        "interface/api",
-        "interface/repositories"
+        "entities",
+        "repositories",
+        "use_cases",
+        "value_objects"
     ]
     
     for folder in folders:
         folder_path = domain_path / folder
         folder_path.mkdir(parents=True, exist_ok=True)
+        
+        # entities 폴더에 기본 파일 생성
+        if folder == "entities":
+            (folder_path / f"{domain_name}.py").touch()
     
     typer.echo(f"Created folder structure for domain: {domain_name}")
-
 
 @app.command("create")
 def create_domains(names: List[str] = typer.Argument(..., help="List of domain names to create")):
