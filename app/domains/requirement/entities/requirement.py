@@ -12,8 +12,7 @@ from app.shared.domain.base_entity import BaseEntity
 from app.shared.domain.mixin.soft_deletion_mixin import SoftDeletionMixin
 from app.shared.domain.mixin.timestamp_mixin import TimestampMixin
 
-
-@dataclass
+@dataclass(kw_only=True)
 class Requirement(BaseEntity, TimestampMixin, SoftDeletionMixin):
     feature_id: int
     author_id: int

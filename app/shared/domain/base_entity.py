@@ -1,6 +1,6 @@
 from dataclasses import dataclass, field
-
+from typing import Optional
 
 @dataclass
 class BaseEntity:
-    id: int = field(default=None)
+    id: Optional[int] = field(default=None)
