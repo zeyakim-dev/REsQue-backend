@@ -15,6 +15,9 @@ uvicorn = "^0.30.6"
 pytest = "^8.3.3"
 typer = "^0.12.5"
 isort = "^5.13.2"
+pre-commit = "^3.8.0"
+black = "^24.8.0"
+mypy = "^1.11.2"
 
 [build-system]
 requires = ["poetry-core"]
