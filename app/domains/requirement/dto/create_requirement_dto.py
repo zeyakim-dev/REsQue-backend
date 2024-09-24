@@ -1,5 +1,6 @@
 from datetime import datetime
 from typing import Optional
+from uuid import UUID
 
 from pydantic import BaseModel, Field
 
@@ -27,8 +28,7 @@ class CreateRequirementRequestDTO(BaseModel):
 
 
 class CreateRequirementResponseDTO(BaseModel):
-    id: int = Field(..., gt=0)
-
+    id: UUID
     title: str = Field(..., min_length=1, max_length=200)
     description: str = Field(..., min_length=1)
     feature_id: int = Field(..., gt=0)
