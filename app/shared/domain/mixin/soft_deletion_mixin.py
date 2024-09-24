@@ -3,7 +3,7 @@ from datetime import datetime
 from typing import Optional
 
 
-@dataclass
+@dataclass(frozen=True)
 class SoftDeletionMixin:
     is_deleted: bool = False
     deleted_at: Optional[datetime] = None
