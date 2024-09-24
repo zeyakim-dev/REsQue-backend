@@ -1,6 +1,7 @@
 from dataclasses import dataclass, field
 from typing import Optional
+from uuid import UUID, uuid4
 
-@dataclass
+@dataclass(frozen=True)
 class BaseEntity:
-    id: Optional[int] = field(default=None)
+    id: UUID = field(default_factory=uuid4)
