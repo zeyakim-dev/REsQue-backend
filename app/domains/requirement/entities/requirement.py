@@ -17,12 +17,15 @@ from app.shared.domain.mixin.timestamp_mixin import TimestampMixin
 class Requirement(BaseEntity, TimestampMixin, SoftDeletionMixin):
     feature_id: int
     author_id: int
+
     title: str
     description: str
+
     type: RequirementType
     status: RequirementStatus
     priority: RequirementPriority
     complexity: RequirementComplexity
+
     assignee_id: Optional[int] = None
     expected_completion_date: Optional[datetime] = None
 
