@@ -3,10 +3,11 @@ from datetime import datetime
 from enum import Enum
 from typing import Optional
 
+from app.domains.project.value_objects import ProjectMemberRole
 from app.shared.domain.base_entity import BaseEntity
 from app.shared.domain.mixin.soft_deletion_mixin import SoftDeletionMixin
 from app.shared.domain.mixin.timestamp_mixin import TimestampMixin
-from app.domains.project.value_objects import ProjectMemberRole
+
 
 @dataclass(kw_only=True)
 class ProjectMember(BaseEntity, TimestampMixin, SoftDeletionMixin):

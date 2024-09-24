@@ -1,9 +1,14 @@
-from sqlalchemy.ext.asyncio import AsyncSession
+from typing import List, Optional
+
 from sqlalchemy import select
-from app.domains.requirement.repositories import RequirementRepository
+from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.domains.requirement.entities import Requirement as RequirementEntity
-from app.domains.requirement.infrastructure.database.models.sql.sql_requirment import SQLRequirement as RequirementModel
-from typing import Optional, List
+from app.domains.requirement.infrastructure.database.models.sql.sql_requirment import (
+    SQLRequirement as RequirementModel,
+)
+from app.domains.requirement.repositories import RequirementRepository
+
 
 class SQLAlchemyRequirementRepository(RequirementRepository):
     def __init__(self, session: AsyncSession):
@@ -15,7 +20,7 @@ class SQLAlchemyRequirementRepository(RequirementRepository):
             description=requirement.description,
             status=requirement.status,
             created_at=requirement.created_at,
-            updated_at=requirement.updated_at
+            updated_at=requirement.updated_at,
         )
         self.session.add(model)
         await self.session.flush()
@@ -55,5 +60,5 @@ class SQLAlchemyRequirementRepository(RequirementRepository):
             description=model.description,
             status=model.status,
             created_at=model.created_at,
-            updated_at=model.updated_at
+            updated_at=model.updated_at,
         )

@@ -12,6 +12,7 @@ from app.shared.domain.base_entity import BaseEntity
 from app.shared.domain.mixin.soft_deletion_mixin import SoftDeletionMixin
 from app.shared.domain.mixin.timestamp_mixin import TimestampMixin
 
+
 @dataclass(frozen=True, kw_only=True)
 class Requirement(BaseEntity, TimestampMixin, SoftDeletionMixin):
     feature_id: int
@@ -27,18 +28,25 @@ class Requirement(BaseEntity, TimestampMixin, SoftDeletionMixin):
 
     def update(self, updating_entity: "Requirement") -> "Requirement":
         updatable_attrs = [
-            "feature_id", "title", "description", "type", "status", 
-            "priority", "complexity", "assignee_id", "expected_completion_date"
+            "feature_id",
+            "title",
+            "description",
+            "type",
+            "status",
+            "priority",
+            "complexity",
+            "assignee_id",
+            "expected_completion_date",
         ]
-        
+
         update_dict = {
             attr: getattr(updating_entity, attr)
             for attr in updatable_attrs
             if getattr(updating_entity, attr) != getattr(self, attr)
         }
-        
+
         if update_dict:
             update_dict["updated_at"] = datetime.now()
             return replace(self, **update_dict)
-        
+
         return self
