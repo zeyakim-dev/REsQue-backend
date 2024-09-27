@@ -7,12 +7,15 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.selectable import Select
 
 from app.application.mappers.requirement_mapper import RequirementMapper
-from app.domains.requirement.entities.requirement import \
-    Requirement as RequirementEntity
-from app.domains.requirement.infrastructure.database.models.base.requirement import \
-    RequirementModel
-from app.domains.requirement.repositories.requirement_repository import \
-    RequirementRepository
+from app.domains.requirement.entities.requirement import (
+    Requirement as RequirementEntity,
+)
+from app.domains.requirement.infrastructure.database.models.base.requirement import (
+    RequirementModel,
+)
+from app.domains.requirement.repositories.requirement_repository import (
+    RequirementRepository,
+)
 
 
 class SQLAlchemyRequirementRepository(RequirementRepository):
