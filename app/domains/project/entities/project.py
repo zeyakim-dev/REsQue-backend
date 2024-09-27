@@ -7,7 +7,7 @@ from app.shared.domain.mixin.soft_deletion_mixin import SoftDeletionMixin
 from app.shared.domain.mixin.timestamp_mixin import TimestampMixin
 
 
-@dataclass(kw_only=True)
+@dataclass(kw_only=True, frozen=True)
 class Project(BaseEntity, TimestampMixin, SoftDeletionMixin):
     name: str
     description: str

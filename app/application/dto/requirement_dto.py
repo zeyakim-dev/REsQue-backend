@@ -18,7 +18,7 @@ from app.domains.requirement.value_objects import (
 )
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class ABCRequirementDTO(ABCDTO):
     title: str
     description: str
@@ -32,23 +32,23 @@ class ABCRequirementDTO(ABCDTO):
     expected_completion_date: Optional[datetime] = None
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class CreateRequirementRequestDTO(ABCRequirementDTO):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class ABCTrackedRequirementDTO(
     ABCRequirementDTO, ABCTimestampDTO, ABCTrackedDTO, ABCSoftDeletionDTO
 ):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class UpdateRequirementRequestDTO(ABCTrackedRequirementDTO):
     pass
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class RequirementResponseDTO(ABCTrackedRequirementDTO):
     pass

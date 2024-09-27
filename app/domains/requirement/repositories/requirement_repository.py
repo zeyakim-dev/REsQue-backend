@@ -1,13 +1,15 @@
 from abc import ABC, abstractmethod
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional, Sequence, Tuple
 from uuid import UUID
 
 from app.application.mappers.requirement_mapper import RequirementMapper
 from app.domains.requirement.entities.requirement import (
     Requirement as RequirementEntity,
 )
-from app.domains.requirement.infrastructure.database.models.base.requirement import RequirementModel
+from app.domains.requirement.infrastructure.database.models.base.requirement import (
+    RequirementModel,
+)
 
 
 @dataclass
@@ -92,7 +94,7 @@ class RequirementRepository(ABC):
         order_by: Optional[List[str]],
         page: int,
         per_page: int,
-    ) -> Tuple[List[RequirementModel], int]:
+    ) -> Tuple[Sequence[RequirementModel], int | None]:
         """필터링된 쿼리를 실행하고 결과를 반환하는 메서드. 하위 클래스에서 구현해야 함."""
         pass
 
@@ -102,11 +104,15 @@ class RequirementRepository(ABC):
         order_by: Optional[List[str]] = None,
         page: int = 1,
         per_page: int = 20,
-    ) -> PaginatedResult:
+    ) -> Optional[PaginatedResult]:
         try:
             models, total = await self._execute_filtered_query(
                 filters, order_by, page, per_page
             )
+
+            if not total:
+                return None
+
             items = [RequirementMapper.model_to_entity(model) for model in models]
             total_pages = (total - 1) // per_page + 1
             page_info = PageInfo(

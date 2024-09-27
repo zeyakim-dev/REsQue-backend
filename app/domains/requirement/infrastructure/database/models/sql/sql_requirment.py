@@ -1,40 +1,71 @@
-from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, String
-from sqlalchemy.orm import relationship
-from app.infrastructure.database.models.sql_model import SQLAlchemyModel
-from sqlalchemy.orm import Mapped, mapped_column
-from sqlalchemy import ForeignKey, Enum, func
-from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from datetime import datetime
 
-from app.domains.requirement.infrastructure.database.models.base.requirement import RequirementModel
+from sqlalchemy import (
+    Boolean,
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    String,
+    func,
+)
+from sqlalchemy.dialects.postgresql import UUID
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+
+from app.domains.requirement.infrastructure.database.models.base.requirement import (
+    RequirementModel,
+)
 from app.domains.requirement.value_objects import (
     RequirementComplexity,
     RequirementPriority,
     RequirementStatus,
     RequirementType,
 )
+from app.infrastructure.database.models.sql_model import SQLAlchemyModel
 
 
 class SQLRequirementModel(SQLAlchemyModel, RequirementModel):
     __tablename__ = "requirements"
 
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True)
-    feature_id: Mapped[int] = mapped_column(ForeignKey("features.id"), nullable=False, index=True)
-    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False, index=True)
+    id: Mapped[uuid.UUID] = mapped_column(
+        UUID(as_uuid=True), primary_key=True, index=True
+    )
+    feature_id: Mapped[int] = mapped_column(
+        ForeignKey("features.id"), nullable=False, index=True
+    )
+    author_id: Mapped[int] = mapped_column(
+        ForeignKey("users.id"), nullable=False, index=True
+    )
     title: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
     description: Mapped[str] = mapped_column(String(1000), nullable=False)
     type: Mapped[RequirementType] = mapped_column(Enum(RequirementType), nullable=False)
-    status: Mapped[RequirementStatus] = mapped_column(Enum(RequirementStatus), nullable=False)
-    priority: Mapped[RequirementPriority] = mapped_column(Enum(RequirementPriority), nullable=False)
-    complexity: Mapped[RequirementComplexity] = mapped_column(Enum(RequirementComplexity), nullable=False)
-    assignee_id: Mapped[int | None] = mapped_column(ForeignKey("users.id"), nullable=True, index=True)
-    expected_completion_date: Mapped[datetime | None] = mapped_column(DateTime, nullable=True)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now(), nullable=False)
-    updated_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), onupdate=func.now(), nullable=True)
+    status: Mapped[RequirementStatus] = mapped_column(
+        Enum(RequirementStatus), nullable=False
+    )
+    priority: Mapped[RequirementPriority] = mapped_column(
+        Enum(RequirementPriority), nullable=False
+    )
+    complexity: Mapped[RequirementComplexity] = mapped_column(
+        Enum(RequirementComplexity), nullable=False
+    )
+    assignee_id: Mapped[int | None] = mapped_column(
+        ForeignKey("users.id"), nullable=True, index=True
+    )
+    expected_completion_date: Mapped[datetime | None] = mapped_column(
+        DateTime, nullable=True
+    )
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True), server_default=func.now(), nullable=False
+    )
+    updated_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), onupdate=func.now(), nullable=True
+    )
     is_deleted: Mapped[bool] = mapped_column(Boolean, default=False, nullable=False)
-    deleted_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
-
+    deleted_at: Mapped[datetime | None] = mapped_column(
+        DateTime(timezone=True), nullable=True
+    )
 
     # ... (나머지 코드는 동일)
 

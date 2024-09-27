@@ -59,7 +59,7 @@ class GetRequirementUseCase(ABCRequirementUseCase):
         requirement_entity = await repo.get_by_id(id)
         if not requirement_entity:
             raise
-        
+
         return RequirementMapper.entity_to_response(requirement_entity)
 
 
@@ -72,9 +72,14 @@ class ListRequirementUseCase(ABCRequirementUseCase):
         per_page: int = 20,
     ) -> PaginatedRequirementResponseDTO:
         repo = self.uow.get_requirement_repository()
-        paginated_result: PaginatedResult = await repo.list_filtered_and_ordered(
-            filters=filters, order_by=order_by, page=page, per_page=per_page
+        paginated_result: Optional[PaginatedResult] = (
+            await repo.list_filtered_and_ordered(
+                filters=filters, order_by=order_by, page=page, per_page=per_page
+            )
         )
+
+        if not paginated_result:
+            return None
 
         requirement_dtos = [
             RequirementMapper.entity_to_response(entity)

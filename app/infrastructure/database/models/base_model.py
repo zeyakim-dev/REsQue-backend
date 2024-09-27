@@ -1,7 +1,12 @@
 from abc import ABC
+from typing import Any
 
-class DomainConceptModel(ABC):
-    ...
 
-class PersistenceModel(ABC):
-    ...
+class BaseModel(ABC):
+    id: Any
+
+
+class DomainConceptModel(BaseModel): ...
+
+
+class PersistenceModel(BaseModel): ...

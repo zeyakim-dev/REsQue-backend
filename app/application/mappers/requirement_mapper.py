@@ -8,7 +8,9 @@ from app.application.dto.requirement_dto import (
 from app.domains.requirement.entities.requirement import (
     Requirement as RequirementEntity,
 )
-from app.domains.requirement.infrastructure.database.models.base.requirement import RequirementModel
+from app.domains.requirement.infrastructure.database.models.base.requirement import (
+    RequirementModel,
+)
 
 
 class RequirementMapper:
