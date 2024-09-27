@@ -1,10 +1,10 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.domains.requirement.infrastructure.database.repositories.sql_requirement_repository import (
-    SQLAlchemyRequirementRepository,
-)
 from app.domains.requirement.repositories.requirement_repository import (
     RequirementRepository,
+)
+from app.infrastructure.database.repositories.sql.requirement.sql_requirement_repository import (
+    SQLAlchemyRequirementRepository,
 )
 from app.infrastructure.database.unit_of_works.unit_of_work import UnitOfWork
 
