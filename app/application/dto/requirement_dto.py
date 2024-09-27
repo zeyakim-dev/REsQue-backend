@@ -1,0 +1,54 @@
+from abc import ABC
+from dataclasses import dataclass
+from datetime import datetime
+from typing import Optional
+from uuid import UUID
+
+from app.application.dto.abc_dto import (
+    ABCDTO,
+    ABCSoftDeletionDTO,
+    ABCTimestampDTO,
+    ABCTrackedDTO,
+)
+from app.domains.requirement.value_objects import (
+    RequirementComplexity,
+    RequirementPriority,
+    RequirementStatus,
+    RequirementType,
+)
+
+
+@dataclass(frozen=True)
+class ABCRequirementDTO(ABCDTO):
+    title: str
+    description: str
+    feature_id: int
+    author_id: int
+    type: RequirementType
+    priority: RequirementPriority
+    complexity: RequirementComplexity
+    status: RequirementStatus = RequirementStatus.TODO
+    assignee_id: Optional[int] = None
+    expected_completion_date: Optional[datetime] = None
+
+
+@dataclass(frozen=True)
+class CreateRequirementRequestDTO(ABCRequirementDTO):
+    pass
+
+
+@dataclass(frozen=True)
+class ABCTrackedRequirementDTO(
+    ABCRequirementDTO, ABCTimestampDTO, ABCTrackedDTO, ABCSoftDeletionDTO
+):
+    pass
+
+
+@dataclass(frozen=True)
+class UpdateRequirementRequestDTO(ABCTrackedRequirementDTO):
+    pass
+
+
+@dataclass(frozen=True)
+class RequirementResponseDTO(ABCTrackedRequirementDTO):
+    pass
