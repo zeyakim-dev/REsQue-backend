@@ -1,7 +1,7 @@
 from abc import ABC
 from dataclasses import dataclass
 from datetime import datetime
-from typing import Optional
+from typing import Optional, List
 from uuid import UUID
 
 from app.application.dto.abc_dto import (
@@ -52,3 +52,17 @@ class UpdateRequirementRequestDTO(ABCTrackedRequirementDTO):
 @dataclass(kw_only=True, frozen=True)
 class RequirementResponseDTO(ABCTrackedRequirementDTO):
     pass
+
+
+@dataclass(kw_only=True, frozen=True)
+class PageInfoDTO:
+    page: int
+    per_page: int
+    total: int
+    total_pages: int
+
+
+@dataclass(kw_only=True, frozen=True)
+class PaginatedRequirementResponseDTO:
+    items: List[RequirementResponseDTO]
+    page_info: PageInfoDTO
