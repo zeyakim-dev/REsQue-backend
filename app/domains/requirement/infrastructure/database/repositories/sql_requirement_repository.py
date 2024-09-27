@@ -1,64 +1,85 @@
-from typing import List, Optional
-
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
-
-from app.domains.requirement.entities import Requirement as RequirementEntity
-from app.domains.requirement.infrastructure.database.models.sql.sql_requirment import (
-    SQLRequirement as RequirementModel,
-)
-from app.domains.requirement.repositories import RequirementRepository
-
+from sqlalchemy import select, func, desc, asc
+from sqlalchemy.sql.selectable import Select
+from app.domains.requirement.infrastructure.database.models.sql.sql_requirment import SQLRequirementModel
+from uuid import UUID
+from typing import Optional, List, Dict, Any, Tuple
+from dataclasses import asdict
+from app.domains.requirement.repositories.requirement_repository import RequirementRepository
+from app.domains.requirement.entities.requirement import Requirement as RequirementEntity
+from app.application.mappers.requirement_mapper import RequirementMapper
 
 class SQLAlchemyRequirementRepository(RequirementRepository):
     def __init__(self, session: AsyncSession):
         self.session = session
 
-    async def create(self, requirement: RequirementEntity) -> RequirementEntity:
-        model = RequirementModel(
-            title=requirement.title,
-            description=requirement.description,
-            status=requirement.status,
-            created_at=requirement.created_at,
-            updated_at=requirement.updated_at,
-        )
-        self.session.add(model)
+    async def _find_model_by_id(self, id: UUID) -> Optional[SQLRequirementModel]:
+        statement = select(SQLRequirementModel).where(SQLRequirementModel.id == id)
+        result = await self.session.execute(statement)
+        return result.scalar_one_or_none()
+
+    async def _save(self, requirement_model: SQLRequirementModel) -> SQLRequirementModel:
+        self.session.add(requirement_model)
         await self.session.flush()
-        requirement.id = model.id
-        return requirement
+        await self.session.refresh(requirement_model)
+        return requirement_model
 
-    async def get_by_id(self, id: int) -> Optional[RequirementEntity]:
-        result = await self.session.execute(select(RequirementModel).filter_by(id=id))
-        model = result.scalar_one_or_none()
-        return self._model_to_entity(model) if model else None
+    async def get_by_id(self, id: UUID) -> Optional[RequirementEntity]:
+        model = await self._find_model_by_id(id)
+        return RequirementMapper.model_to_entity(model) if model else None
 
-    async def list_all(self) -> List[RequirementEntity]:
-        result = await self.session.execute(select(RequirementModel))
-        return [self._model_to_entity(model) for model in result.scalars().all()]
+    async def _update(self, updated_entity: RequirementEntity, updating_model: SQLRequirementModel) -> SQLRequirementModel:
+        for key, value in asdict(updated_entity).items():
 
-    async def update(self, requirement: RequirementEntity) -> RequirementEntity:
-        model = await self.session.get(RequirementModel, requirement.id)
-        if model:
-            model.title = requirement.title
-            model.description = requirement.description
-            model.status = requirement.status
-            model.updated_at = requirement.updated_at
-            await self.session.flush()
-        return requirement
+            if key != 'id' and hasattr(updating_model, key):
+                setattr(updating_model, key, value)
 
-    async def delete(self, requirement_id: int) -> bool:
-        model = await self.session.get(RequirementModel, requirement_id)
-        if model:
-            await self.session.delete(model)
-            return True
-        return False
+        await self.session.flush()
+        await self.session.refresh(updating_model)
+        return updating_model
 
-    def _model_to_entity(self, model: RequirementModel) -> RequirementEntity:
-        return RequirementEntity(
-            id=model.id,
-            title=model.title,
-            description=model.description,
-            status=model.status,
-            created_at=model.created_at,
-            updated_at=model.updated_at,
-        )
+    async def _delete(self, model: SQLRequirementModel) -> bool:
+        await self.session.delete(model)
+        await self.session.flush()
+        return True
+
+    def _apply_filters(self, query: Select, filters: Optional[Dict[str, Any]]) -> Select:
+        if filters:
+            for key, value in filters.items():
+                if hasattr(SQLRequirementModel, key):
+                    query = query.where(getattr(SQLRequirementModel, key) == value)
+        return query
+
+    def _apply_ordering(self, query: Select, order_by: Optional[List[str]]) -> Select:
+        if order_by:
+            for field in order_by:
+                direction = desc if field.startswith('-') else asc
+                field = field.lstrip('-')
+                if hasattr(SQLRequirementModel, field):
+                    query = query.order_by(direction(getattr(SQLRequirementModel, field)))
+        return query
+
+    def _apply_pagination(self, query: Select, page: int, per_page: int) -> Select:
+        return query.offset((page - 1) * per_page).limit(per_page)
+
+    async def _execute_filtered_query(
+        self, 
+        filters: Optional[Dict[str, Any]], 
+        order_by: Optional[List[str]], 
+        page: int, 
+        per_page: int
+    ) -> Tuple[List[SQLRequirementModel], int]:
+        query = select(SQLRequirementModel)
+
+        query = self._apply_filters(query, filters)
+        query = self._apply_ordering(query, order_by)
+
+        count_query = select(func.count()).select_from(query.subquery())
+        total = await self.session.scalar(count_query)
+
+        query = self._apply_pagination(query, page, per_page)
+
+        result = await self.session.execute(query)
+        items = result.scalars().all()
+
+        return items, total
