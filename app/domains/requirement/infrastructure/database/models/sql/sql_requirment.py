@@ -1,13 +1,13 @@
 from sqlalchemy import Boolean, Column, DateTime, Enum, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
-from app.infrastructure.database.models.sql_model import ABCSQLModel
+from app.infrastructure.database.models.sql_model import SQLAlchemyModel
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy import ForeignKey, Enum, func
 from sqlalchemy.dialects.postgresql import UUID
 import uuid
 from datetime import datetime
 
-from app.domains.requirement.infrastructure.database.models.base.requirement import ABCRequirementModel
+from app.domains.requirement.infrastructure.database.models.base.requirement import RequirementModel
 from app.domains.requirement.value_objects import (
     RequirementComplexity,
     RequirementPriority,
@@ -16,7 +16,7 @@ from app.domains.requirement.value_objects import (
 )
 
 
-class SQLRequirementModel(ABCSQLModel, ABCRequirementModel):
+class SQLRequirementModel(SQLAlchemyModel, RequirementModel):
     __tablename__ = "requirements"
 
     id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True), primary_key=True, index=True)
