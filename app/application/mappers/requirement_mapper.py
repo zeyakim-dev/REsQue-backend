@@ -1,16 +1,14 @@
 from dataclasses import asdict
 from typing import Any, Type
 
-from app.domains.requirement.dto.create_requirement_dto import (
-    CreateRequirementRequestDTO,
-    CreateRequirementResponseDTO,
+from app.application.dto.requirement_dto import (
+    ABCRequirementDTO,
+    RequirementResponseDTO,
 )
 from app.domains.requirement.entities.requirement import (
     Requirement as RequirementEntity,
 )
-from app.domains.requirement.infrastructure.database.models.sql.sql_requirment import (
-    SQLRequirement as RequirementModel,
-)
+from app.domains.requirement.infrastructure.database.models.base.requirement import RequirementModel
 
 
 class RequirementMapper:
@@ -29,11 +27,11 @@ class RequirementMapper:
         return RequirementModel(**entity_dict)
 
     @staticmethod
-    def request_to_entity(request: CreateRequirementRequestDTO) -> RequirementEntity:
+    def request_to_entity(request: ABCRequirementDTO) -> RequirementEntity:
         request_dict = asdict(request)
         return RequirementEntity(**request_dict)
 
     @staticmethod
-    def entity_to_response(entity: RequirementEntity) -> CreateRequirementResponseDTO:
+    def entity_to_response(entity: RequirementEntity) -> RequirementResponseDTO:
         entity_dict = asdict(entity)
-        return CreateRequirementResponseDTO(**entity_dict)
+        return RequirementResponseDTO(**entity_dict)
