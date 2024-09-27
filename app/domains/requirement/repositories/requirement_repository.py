@@ -7,7 +7,7 @@ from app.application.mappers.requirement_mapper import RequirementMapper
 from app.domains.requirement.entities.requirement import (
     Requirement as RequirementEntity,
 )
-from app.domains.requirement.infrastructure.database.models.base.requirement import ABCRequirementModel
+from app.domains.requirement.infrastructure.database.models.base.requirement import RequirementModel
 
 
 @dataclass
@@ -26,7 +26,7 @@ class PaginatedResult:
 
 class RequirementRepository(ABC):
     @abstractmethod
-    async def _find_model_by_id(self, id: UUID) -> Optional[ABCRequirementModel]:
+    async def _find_model_by_id(self, id: UUID) -> Optional[RequirementModel]:
         pass
 
     async def create(self, requirement: RequirementEntity) -> RequirementEntity:
@@ -63,8 +63,8 @@ class RequirementRepository(ABC):
 
     @abstractmethod
     async def _update(
-        self, updated_entity: RequirementEntity, updating_model: ABCRequirementModel
-    ) -> ABCRequirementModel:
+        self, updated_entity: RequirementEntity, updating_model: RequirementModel
+    ) -> RequirementModel:
         pass
 
     async def delete(self, id: UUID) -> bool:
@@ -78,11 +78,11 @@ class RequirementRepository(ABC):
             raise
 
     @abstractmethod
-    async def _save(self, requirement_model: ABCRequirementModel) -> ABCRequirementModel:
+    async def _save(self, requirement_model: RequirementModel) -> RequirementModel:
         pass
 
     @abstractmethod
-    async def _delete(self, requirement_model: ABCRequirementModel) -> bool:
+    async def _delete(self, requirement_model: RequirementModel) -> bool:
         pass
 
     @abstractmethod
@@ -92,7 +92,7 @@ class RequirementRepository(ABC):
         order_by: Optional[List[str]],
         page: int,
         per_page: int,
-    ) -> Tuple[List[ABCRequirementModel], int]:
+    ) -> Tuple[List[RequirementModel], int]:
         """필터링된 쿼리를 실행하고 결과를 반환하는 메서드. 하위 클래스에서 구현해야 함."""
         pass
 
