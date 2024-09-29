@@ -8,9 +8,9 @@ from app.domains.requirement.value_objects import (
     RequirementStatus,
     RequirementType,
 )
-from app.shared.domain.base_entity import BaseEntity
-from app.shared.domain.mixin.soft_deletion_mixin import SoftDeletionMixin
-from app.shared.domain.mixin.timestamp_mixin import TimestampMixin
+from app.shared.domains.entities.base_entity import BaseEntity
+from app.shared.domains.mixins.soft_deletion_mixin import SoftDeletionMixin
+from app.shared.domains.mixins.timestamp_mixin import TimestampMixin
 
 
 @dataclass(frozen=True, kw_only=True)
