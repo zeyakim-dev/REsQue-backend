@@ -1,3 +1,4 @@
+
 from abc import ABC, abstractmethod
 
 from app.applications.dto.abc_dto import ABCDTO

@@ -3,6 +3,6 @@ from typing import Optional
 from uuid import UUID, uuid4
 
 
-@dataclass(frozen=True)
+@dataclass(kw_only=True, frozen=True)
 class BaseEntity:
     id: UUID = field(default_factory=uuid4)

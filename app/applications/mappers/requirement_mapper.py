@@ -1,7 +1,7 @@
 from dataclasses import asdict
 from typing import Any, Type
 
-from app.application.dto.requirement_dto import (
+from app.applications.dto.requirement_dto import (
     ABCRequirementDTO,
     RequirementResponseDTO,
 )
